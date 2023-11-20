@@ -8,7 +8,7 @@ import Todolist from './components/todolistComponents/todolist';
 import AllUser from './components/todolistComponents/alluser';
 import CreateTodolist from './components/todolistComponents/createTodolist';
 
-export const url = 'http://localhost:4000';
+export const url = 'https://todolist-app-a5zc.onrender.com';
 function App() {
   return <>
   <BrowserRouter>
