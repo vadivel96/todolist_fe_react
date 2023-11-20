@@ -12,25 +12,14 @@ const registerValidation = Yup.object().shape({
   
   firstName:Yup.string().required('Required'),
   lastName:Yup.string().required('Required'),
-  gender:Yup.string().required('Required'),
-  age:Yup.string().required('Required'),
-  dateOfBirth:Yup.string().required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
-  mobileNumber:Yup.string().required('Required'),
-  address1:Yup.string().required('Required'),
-  address2:Yup.string().required('Required'),
-  address3:Yup.string().required('Required'),
-  state:Yup.string().required('Required'),
-  nationality:Yup.string().required('Required'),
-  pinCode:Yup.string().required('Required'),
   password: Yup.string()
   .min(2, 'Too Short!')
   .max(50, 'Too Long!')
   .required('Required'),
-  // confirmPassword:Yup.string()
-  // .min(2, 'Too Short!')
-  // .max(50, 'Too Long!')
-  // .required('Required')
+  confirmPassword:Yup.string()
+  .oneOf([Yup.ref('password'), null], 'Passwords must match')
+  .required('Confirm Password is required'),
 });
 
 
@@ -38,12 +27,20 @@ function Register() {
     let navigate=useNavigate();
 
  let handleSubmit = async(event)=>{
-   console.log(event)
+   let data={firstName:event.firstName,lastName:event.lastName,email:event.email,
+  password:event.password}
     try {
-        let res = await axios.post(`${url}/customer/createCustomer`,event)
-            console.log(res)
-        if(res.status===201){
-           alert(res.data.message+"Now, you can go back to login page to login!!!!!"); 
+        let res = await axios.post(`${url}/auth/createUser`,data)
+            console.log(res);
+            if(res.data==="already user exists!!"){
+              console.log(res.data)
+              alert("This email ID already taken !!, please use another email ");
+              return
+            }
+        if(res.status===201 || 200){
+          sessionStorage.setItem('accesToken',res.data.accesToken);
+          sessionStorage.setItem('refreshToken',res.data.refreshToken);
+           alert(res.statusText +"!! Now, you can go back to login page to login!!!!!"); 
         }
         
     } catch (error) {
@@ -53,6 +50,7 @@ function Register() {
 }
 
 let handleCancel=()=>{
+  console.log("handleCancel clicked")
     navigate('/login');
 }
 
@@ -66,27 +64,18 @@ let handleCancel=()=>{
       <div className="row justify-content-center  ">
         
         <div className="col-md-6 mb-3">
-        <h2 className="mainTitle text-center mt-5"><b><p>Customer Registration</p></b></h2>       
+        <h2 className="mainTitle text-center mt-5"><b><p>User Registration</p></b></h2>       
         <Formik
       initialValues={{
         firstName:'',
         lastName:'',
-        gender:'',
-        age:'',
-        dateOfBirth:'',
         email:'',
-        mobileNumber:'',
-        address1:'',
-        address2:'',
-        address3:'',
-        state:'',
-        nationality:'',
-        pinCode:'',
         password: '',
-       // confirmPassword:'',
+       confirmPassword:'',
       }}
       validationSchema={registerValidation}
-      onSubmit={handleSubmit}>
+      onSubmit={handleSubmit}
+      onReset={handleCancel}>
 
       <Form className='form-control mb-3 '>
         <div className="form-group mb-3">
@@ -109,36 +98,7 @@ let handleCancel=()=>{
           />
           <div style={{color:"red"}}><ErrorMessage name='lastName'/></div>
         </div>
-        <div className="form-group mb-3">
-          <label htmlFor="gender"><b className="loginTitle">gender:</b></label>
-          <Field
-            className="form-control  "
-            id='gender'
-            name='gender'
-            placeholder='gender'
-          />
-          <div style={{color:"red"}}><ErrorMessage name='email'/></div>
-        </div>
-        <div className="form-group mb-3">
-          <label htmlFor="age"><b className="loginTitle">age:</b></label>
-          <Field
-            className="form-control  "
-            id='age'
-            name='age'
-            placeholder='age'
-          />
-          <div style={{color:"red"}}><ErrorMessage name='age'/></div>
-        </div>
-        <div className="form-group mb-3">
-          <label htmlFor="dateOfBirth"><b className="loginTitle">Date Of Birth:</b></label>
-          <Field
-            className="form-control  "
-            id='dateOfBirth'
-            name='dateOfBirth'
-            placeholder='Date Of Birth'
-          />
-          <div style={{color:"red"}}><ErrorMessage name='dateOfBirth'/></div>
-        </div>
+ 
         <div className="form-group mb-3">
           <label htmlFor="email"><b className="loginTitle">E-mail:</b></label>
           <Field
@@ -149,76 +109,7 @@ let handleCancel=()=>{
           />
           <div style={{color:"red"}}><ErrorMessage name='email'/></div>
         </div>
-        <div className="form-group mb-3">
-          <label htmlFor="mobileNumber"><b className="loginTitle">Mobile Number:</b></label>
-          <Field
-            className="form-control  "
-            id='mobileNumber'
-            name='mobileNumber'
-            placeholder='Mobile Number'
-          />
-          <div style={{color:"red"}}><ErrorMessage name='mobileNumber'/></div>
-        </div>
-        <div className="form-group mb-3">
-          <label htmlFor="address1"><b className="loginTitle">address1:</b></label>
-          <Field
-            className="form-control  "
-            id='address1'
-            name='address1'
-            placeholder='apartment/house no,street Name'
-          />
-          <div style={{color:"red"}}><ErrorMessage name='address1'/></div>
-        </div>
-        <div className="form-group mb-3">
-          <label htmlFor="address2"><b className="loginTitle">address2:</b></label>
-          <Field
-            className="form-control  "
-            id='address2'
-            name='address2'
-            placeholder='Area/locality'
-          />
-          <div style={{color:"red"}}><ErrorMessage name='address2'/></div>
-        </div>
-        <div className="form-group mb-3">
-          <label htmlFor="address3"><b className="loginTitle">address3:</b></label>
-          <Field
-            className="form-control  "
-            id='address3'
-            name='address3'
-            placeholder='District'
-          />
-          <div style={{color:"red"}}><ErrorMessage name='address3'/></div>
-        </div>
-        <div className="form-group mb-3">
-          <label htmlFor="state"><b className="loginTitle">state:</b></label>
-          <Field
-            className="form-control  "
-            id='state'
-            name='state'
-            placeholder='state'
-          />
-          <div style={{color:"red"}}><ErrorMessage name='state'/></div>
-        </div>
-        <div className="form-group mb-3">
-          <label htmlFor="nationality"><b className="loginTitle">nationality:</b></label>
-          <Field
-            className="form-control  "
-            id='nationality'
-            name='nationality'
-            placeholder='nationality'
-          />
-          <div style={{color:"red"}}><ErrorMessage name='nationality'/></div>
-        </div>
-        <div className="form-group mb-3">
-          <label htmlFor="pinCode"><b className="loginTitle">Pin Code:</b></label>
-          <Field
-            className="form-control  "
-            id='pinCode'
-            name='pinCode'
-            placeholder='Pin Code'
-          />
-          <div style={{color:"red"}}><ErrorMessage name='pinCode'/></div>
-        </div>
+
         <div className="form-group mb-3 ">
           <label htmlFor="password"><b className="loginTitle">password:</b></label>
           <Field
@@ -232,7 +123,7 @@ let handleCancel=()=>{
           
         </div>
 
-        {/* <div className="form-group mb-3 ">
+        <div className="form-group mb-3 ">
           <label htmlFor="confirmPassword"><b className="loginTitle">Confirm password:</b></label>
           <Field
             className="form-control "
@@ -243,10 +134,11 @@ let handleCancel=()=>{
           />
           <div style={{color:"red"}}><ErrorMessage name='confirmPassword'/></div>
           
-        </div> */}
+        </div>
         <br/>
           
-        <button type="submit" className="btn btn-primary">Submit</button>
+        <button type="submit" className="btn btn-primary">Submit</button>&nbsp;&nbsp;&nbsp;
+        <button type="reset" onClick={handleCancel} className="btn btn-danger">Go back to Login page</button>
       </Form>
     
     

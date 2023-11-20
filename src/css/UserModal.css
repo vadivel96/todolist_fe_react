@@ -1,0 +1,20 @@
+.userModal-container{
+    position:fixed;
+    z-index:1;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.11);
+
+}
+
+.userModal{
+    background-color: aliceblue;
+    width:50em;
+    padding: 2rem;
+    border: radius 5px;
+}

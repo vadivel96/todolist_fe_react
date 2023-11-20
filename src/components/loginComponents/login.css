@@ -1,14 +1,15 @@
 .background-image{
     height:100vh;
    background-image: 
-   url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y29ycG9yYXRlJTIwYnVpbGRpbmd8ZW58MHx8MHx8&w=1000&q=80');
-   background-repeat: no-repeat;
+   url('../photos/loginBackground.jpg');
+    background-repeat: no-repeat;
    background-size:cover;
 }
 
 .layer{
     background-color:rgba(1, 1, 1, 0.621);
     color: rgb(255, 255, 255);
-    border-radius: 10px;;
+    border-radius: 10px;
+    min-width:300px;
 }
 

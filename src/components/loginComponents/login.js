@@ -14,7 +14,7 @@ const loginValidation = Yup.object().shape({
   
   email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string()
-    .min(2, 'Too Short!')
+    //.min(2, 'Too Short!')
     .max(50, 'Too Long!')
     .required('Required'),
 });
@@ -25,26 +25,21 @@ const loginValidation = Yup.object().shape({
 
 function LoginPage() {
  
+
   let navigate = useNavigate();
   
 const handleSubmit = async(event) => {
-   console.log(event);
+   
   
   try {
-    let res = await axios.post(`${url}/`,event)
-    console.log(typeof res);
-    console.log(res);
-    if(res.status===200){
-        sessionStorage.setItem('token',res.data.token)
-        toast.success(res.data.message)
-        if(res.data.role=="employee"){
-
-          navigate('/dashboard')
-        }
-        if(res.data.role=="customer"){
-          navigate('/customerPage')
-        }
-       
+    let res = await axios.post(`${url}/auth/loginUser`,event)
+    console.log(event.email);
+    if(res.status===201 || 200){
+        sessionStorage.setItem('accessToken',res.data.accessToken);
+        sessionStorage.setItem('refreshToken',res.data.refreshToken);
+        localStorage.setItem('id',res.data.id);
+        toast.success(" login successfull !!")
+        navigate('/todolist')      
     }
     else{
       console.log(res);
@@ -52,7 +47,6 @@ const handleSubmit = async(event) => {
     
     
 } catch (error) {
-  console.log(error.response.data.message)
     toast.error(error.response.data.message)
 }
 
@@ -69,16 +63,16 @@ const register=async(event)=>{
   return (
     <>
     
-    <div className="background-image  ">
-    <div className="position-absolute top-50 start-50 translate-middle layer p-3">
-    <div className="container ">
+    <div className="background-image ">
+    <div className="position-absolute top-50 start-50 translate-middle layer   p-3">
+    <div className="container  ">
       <div className="row ">
         
         <div className="col">
-        <h2 className="mainTitle text-center"><b><p>Customer Relationship Management</p></b></h2>
+        <h2 className="mainTitle text-center"><b><p>Todolist App</p></b></h2>
         <h3 className='text-center'><b>Login</b></h3>
         
-        <Formik
+        <Formik className=""
       initialValues={{
         email: '',
         password: '',
@@ -86,8 +80,8 @@ const register=async(event)=>{
       validationSchema={loginValidation}
       onSubmit={handleSubmit}>
 
-      <Form >
-        <div className="form-group mb-1">
+      <Form className='' >
+        <div className="form-group  mb-1">
           <label htmlFor="email"><b className="loginTitle">E-mail:</b></label>
           <Field
             className="form-control mb-2 "

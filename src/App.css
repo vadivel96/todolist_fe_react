@@ -13,15 +13,10 @@ body{
   color: #fff; 
 }
 
-.loginTitle{
- font-size:large;
-}
-
-@media(min-width:992px){
-  .main{
-      margin-left: var(--offcanvas-width);
-  }
-  body{
-      overflow: auto;
-  }
+.todoCreate{
+ 
+   background-image: url('./components/photos/todoBackground.jpg');
+   background-repeat: no-repeat;
+   background-position: center;
+   background-size: cover;
 }

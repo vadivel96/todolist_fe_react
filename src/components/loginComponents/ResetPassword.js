@@ -27,7 +27,7 @@ function ResetPassword() {
   let params=useParams();
   let {email}=params;
   console.log(email);
-const handleSubmit = async (event) => {
+  const handleSubmit = async (event) => {
   console.log(event);
   console.log('im working')
   try {
